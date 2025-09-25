@@ -1,0 +1,176 @@
+/* TradingView-подібний графік свічок - Стилі */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #131722;
+    color: #d1d4dc;
+    overflow-x: hidden;
+}
+
+.header {
+    background: #1e222d;
+    padding: 15px 20px;
+    border-bottom: 1px solid #2a2e39;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00d4aa;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    background: #2962ff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #1e4bd8;
+}
+
+.btn.secondary {
+    background: #424242;
+}
+
+.btn.secondary:hover {
+    background: #616161;
+}
+
+.main-content {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.chart-container {
+    background: #1e222d;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.chart-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #d1d4dc;
+    text-align: center;
+}
+
+#chart {
+    width: 100%;
+    height: 700px;
+}
+
+.info-panel {
+    background: #1e222d;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #787b86;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d1d4dc;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #787b86;
+}
+
+.error {
+    text-align: center;
+    padding: 50px;
+    color: #f44336;
+    font-size: 18px;
+}
+
+/* Адаптивний дизайн */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    #chart {
+        height: 500px;
+    }
+}
+
+/* Світла тема */
+body.light-theme {
+    background: #ffffff;
+    color: #000000;
+}
+
+body.light-theme .header {
+    background: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+body.light-theme .chart-container,
+body.light-theme .info-panel {
+    background: #f5f5f5;
+}
+
+body.light-theme .chart-title {
+    color: #000000;
+}
+
+body.light-theme .info-value {
+    color: #000000;
+}
+
+body.light-theme .info-label {
+    color: #666666;
+}
+

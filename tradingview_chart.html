@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradingView-подібний графік свічок</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: #1e222d;
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4aa;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: #2962ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #1e4bd8;
+        }
+        
+        .btn.secondary {
+            background: #424242;
+        }
+        
+        .btn.secondary:hover {
+            background: #616161;
+        }
+        
+        .main-content {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .chart-container {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        /* Виправлення проблеми з вибором тексту */
+        .chart-container * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* Дозволити вибір тільки для TradingView widget */
+        #tradingview-widget {
+            user-select: auto;
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+        }
+        
+        .chart-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #d1d4dc;
+            text-align: center;
+        }
+        
+        #tradingview-widget {
+            width: 100%;
+            height: 80vh; /* 80% висоти екрану */
+            min-height: 600px; /* мінімальна висота */
+        }
+        
+        .info-panel {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #787b86;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d1d4dc;
+        }
+        
+        .symbol-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .symbol-btn {
+            background: #00d4aa;
+            color: #1e1e1e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        
+        .symbol-btn:hover {
+            background: #00b894;
+        }
+        
+        .symbol-btn.active {
+            background: #2962ff;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding: 10px;
+            }
+            
+            #tradingview-widget {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">📈 TradingChart</div>
+        <div class="controls">
+            <button class="btn" onclick="refreshChart()">🔄 Оновити</button>
+            <button class="btn secondary" onclick="toggleTheme()">🌙 Тема</button>
+            <button class="btn secondary" onclick="exportChart()">💾 Експорт</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="chart-container">
+            <div class="chart-title">XRP/USDT - TradingView-подібний графік</div>
+            
+            <div class="symbol-buttons">
+                <button class="symbol-btn active" onclick="changeSymbol('BINANCE:BTCUSDT')">BTC/USDT</button>
+                <button class="symbol-btn" onclick="changeSymbol('BINANCE:ETHUSDT')">ETH/USDT</button>
+                <button class="symbol-btn" onclick="changeSymbol('BINANCE:XRPUSDT')">XRP/USDT</button>
+                <button class="symbol-btn" onclick="changeSymbol('BINANCE:ADAUSDT')">ADA/USDT</button>
+                <button class="symbol-btn" onclick="changeSymbol('BINANCE:DOTUSDT')">DOT/USDT</button>
+            </div>
+            
+            <div id="tradingview-widget"></div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Остання ціна</div>
+                    <div class="info-value" id="last-price">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Зміна 24г</div>
+                    <div class="info-value" id="change-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Обсяг 24г</div>
+                    <div class="info-value" id="volume-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Високий 24г</div>
+                    <div class="info-value" id="high-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Низький 24г</div>
+                    <div class="info-value" id="low-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Кількість свічок</div>
+                    <div class="info-value" id="candles-count">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TradingView Widget Script -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        let currentWidget = null;
+        let currentSymbol = 'BINANCE:XRPUSDT';
+        let isDarkTheme = true;
+        
+        // Завантаження TradingView widget
+        function loadTradingViewWidget(symbol = 'BINANCE:XRPUSDT') {
+            const container = document.getElementById('tradingview-widget');
+            if (container) {
+                container.innerHTML = '';
+                
+                // Створити новий TradingView widget
+                currentWidget = new TradingView.widget({
+                    "width": "100%",
+                    "height": "100%",
+                    "symbol": symbol,
+                    "interval": "1D", // 1 день для відображення наших даних
+                    "timezone": "Europe/Kiev",
+                    "theme": isDarkTheme ? "dark" : "light",
+                    "style": "1",
+                    "locale": "uk",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "hide_side_toolbar": false,
+                    "allow_symbol_change": true,
+                    "container_id": "tradingview-widget",
+                    "studies": [
+                        "RSI@tv-basicstudies",
+                        "MAExp@tv-basicstudies",
+                        "MACD@tv-basicstudies"
+                    ],
+                    "show_popup_button": true,
+                    "popup_width": "1000",
+                    "popup_height": "650",
+                    "datafeed": {
+                        "onReady": function(callback) {
+                            console.log('TradingView datafeed ready');
+                            callback({
+                                exchanges: [],
+                                symbols_types: [],
+                                supported_resolutions: ['1D']
+                            });
+                        }
+                    }
+                });
+                
+                console.log('✅ TradingView widget завантажено для:', symbol);
+                updateInfoPanel(symbol);
+            }
+        }
+        
+        // Зміна символу
+        function changeSymbol(symbol) {
+            console.log('🔄 Зміна символу на:', symbol);
+            currentSymbol = symbol;
+            
+            // Оновити активну кнопку
+            document.querySelectorAll('.symbol-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadTradingViewWidget(symbol);
+        }
+        
+        // Оновлення інформаційної панелі
+        function updateInfoPanel(symbol) {
+            // Тут можна додати логіку для отримання реальних даних
+            // Поки що показуємо заглушки
+            document.getElementById('last-price').textContent = 'Завантаження...';
+            document.getElementById('change-24h').textContent = 'Завантаження...';
+            document.getElementById('volume-24h').textContent = 'Завантаження...';
+            document.getElementById('high-24h').textContent = 'Завантаження...';
+            document.getElementById('low-24h').textContent = 'Завантаження...';
+            document.getElementById('candles-count').textContent = 'Завантаження...';
+        }
+        
+        // Оновлення графіка
+        function refreshChart() {
+            console.log('🔄 Оновлення графіка...');
+            loadTradingViewWidget(currentSymbol);
+        }
+        
+        // Перемикання теми
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            
+            if (isDarkTheme) {
+                document.body.style.background = '#131722';
+                document.body.style.color = '#d1d4dc';
+            } else {
+                document.body.style.background = '#ffffff';
+                document.body.style.color = '#000000';
+            }
+            
+            const containers = document.querySelectorAll('.chart-container, .info-panel');
+            containers.forEach(container => {
+                container.style.background = isDarkTheme ? '#1e222d' : '#f5f5f5';
+            });
+            
+            const themeBtn = document.querySelector('.btn.secondary');
+            themeBtn.textContent = isDarkTheme ? '🌙 Тема' : '☀️ Тема';
+            
+            // Перезавантажити графік з новою темою
+            loadTradingViewWidget(currentSymbol);
+        }
+        
+        // Експорт графіка
+        function exportChart() {
+            if (currentWidget) {
+                // TradingView widget має вбудовану функцію експорту
+                console.log('💾 Експорт графіка...');
+                // Тут можна додати логіку експорту
+            }
+        }
+        
+        // Завантажити widget після завантаження сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            // Зачекати завантаження TradingView
+            setTimeout(() => {
+                loadTradingViewWidget();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

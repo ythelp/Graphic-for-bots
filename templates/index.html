@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradingView-подібний графік свічок</title>
+    
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">📈 TradingChart</div>
+        <div class="controls">
+            <button class="btn" onclick="refreshChart()">🔄 Оновити</button>
+            <button class="btn secondary" onclick="toggleTheme()">🌙 Тема</button>
+            <button class="btn secondary" onclick="exportChart()">💾 Експорт</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="chart-container">
+            <div class="chart-title">XRP/USDT - TradingView-подібний графік</div>
+            <div id="chart">
+                <div class="loading">Завантаження графіка...</div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Остання ціна</div>
+                    <div class="info-value" id="last-price">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Зміна 24г</div>
+                    <div class="info-value" id="change-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Обсяг 24г</div>
+                    <div class="info-value" id="volume-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Високий 24г</div>
+                    <div class="info-value" id="high-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Низький 24г</div>
+                    <div class="info-value" id="low-24h">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Кількість свічок</div>
+                    <div class="info-value" id="candles-count">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+

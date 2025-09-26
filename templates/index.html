@@ -16,6 +16,7 @@
         <div class="logo">📈 TradingChart</div>
         <div class="controls">
             <button class="btn" onclick="refreshChart()">🔄 Оновити</button>
+            <button class="btn secondary" onclick="loadAllCandles()">📊 Всі свічки (1,000)</button>
             <button class="btn secondary" onclick="toggleTheme()">🌙 Тема</button>
             <button class="btn secondary" onclick="exportChart()">💾 Експорт</button>
         </div>
@@ -24,9 +25,10 @@
     <div class="main-content">
         <div class="chart-container">
             <div class="chart-title">XRP/USDT - TradingView-подібний графік</div>
-            <div id="chart">
-                <div class="loading">Завантаження графіка...</div>
-            </div>
+        <div id="chart">
+            <div class="loading">Завантаження графіка...</div>
+        </div>
+        
         </div>
         
         <div class="info-panel">

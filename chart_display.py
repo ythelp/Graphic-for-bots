@@ -69,13 +69,10 @@ class ChartDisplay:
             print("Дані не завантажені!")
             return
         
-        # Створюємо підграфіки
+        # Створюємо графік без обсягу (тільки ціна)
         self.fig = make_subplots(
-            rows=2, cols=1,
-            shared_xaxes=True,
-            vertical_spacing=0.03,
-            subplot_titles=('Ціна XRP/USDT', 'Обсяг'),
-            row_width=[0.7, 0.3]
+            rows=1, cols=1,
+            subplot_titles=('Ціна XRP/USDT',)
         )
         
         # Перетворюємо дані в списки для правильної серіалізації
@@ -110,36 +107,17 @@ class ChartDisplay:
         print(f"   - Перша свічка: O={self.data['open_price'].iloc[0]:.4f}, H={self.data['high_price'].iloc[0]:.4f}, L={self.data['low_price'].iloc[0]:.4f}, C={self.data['close_price'].iloc[0]:.4f}")
         print(f"   - Остання свічка: O={self.data['open_price'].iloc[-1]:.4f}, H={self.data['high_price'].iloc[-1]:.4f}, L={self.data['low_price'].iloc[-1]:.4f}, C={self.data['close_price'].iloc[-1]:.4f}")
         
-        # Додаємо обсяг
-        if 'volume' in self.data.columns:
-            volume_data = self.data['volume'].tolist()
-            self.fig.add_trace(
-                go.Bar(
-                    x=x_data,
-                    y=volume_data,
-                    name='Обсяг',
-                    marker_color='#42A5F5',
-                    opacity=0.7,
-                    showlegend=True
-                ),
-                row=2, col=1
-            )
+        # Обсяг прибрано для збільшення розміру графіка
         
         # Налаштування осей
         self.fig.update_xaxes(
             title_text="Час",
-            rangeslider_visible=False,
-            row=2, col=1
+            rangeslider_visible=True
         )
         
         self.fig.update_yaxes(
             title_text="Ціна (USDT)",
-            row=1, col=1
-        )
-        
-        self.fig.update_yaxes(
-            title_text="Обсяг",
-            row=2, col=1
+            side="right"  # Переносимо вісь цін справа як на TradingView
         )
         
         # Налаштування layout
@@ -150,11 +128,31 @@ class ChartDisplay:
                 'xanchor': 'center',
                 'font': {'size': 20}
             },
-            xaxis_rangeslider_visible=False,
-            height=800,
+            xaxis_rangeslider_visible=True,
+            height=1000,  # Збільшена висота для більшого графіка
             showlegend=True,
             template='plotly_dark',
-            hovermode='x unified'
+            hovermode=False,  # Вимкнено hover для прибирання блоку ціни
+            # Налаштування для TradingView-подібного пересування
+            dragmode='pan',  # Режим пересування мишею
+            xaxis=dict(
+                rangeslider=dict(visible=True),
+                type='date',
+                showgrid=True,
+                gridcolor='#2a2e39',
+                gridwidth=1
+            ),
+            yaxis=dict(
+                side='right',
+                showgrid=True,
+                gridcolor='#2a2e39',
+                gridwidth=1
+            )
+        )
+        
+        # Повністю вимикаємо hover ефекти
+        self.fig.update_traces(
+            hoverinfo='skip'
         )
     
     def add_technical_indicators(self):

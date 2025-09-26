@@ -57,17 +57,17 @@ body {
 }
 
 .main-content {
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: 10px;
+    max-width: 100%;
+    margin: 0;
 }
 
 .chart-container {
     background: #1e222d;
     border-radius: 8px;
-    padding: 20px;
+    padding: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .chart-title {
@@ -79,14 +79,181 @@ body {
 
 #chart {
     width: 100%;
-    height: 700px;
+    height: 90vh; /* 90% висоти екрану для більшого графіка */
+    min-height: 800px; /* збільшена мінімальна висота */
+    position: relative;
 }
+
+/* Повністю прибираємо hover ефекти з графіка */
+#chart .plotly .hoverlayer {
+    display: none !important;
+}
+
+#chart .plotly .hovertext {
+    display: none !important;
+}
+
+#chart .plotly .hoverlabel {
+    display: none !important;
+}
+
+#chart .plotly .spikeline {
+    display: none !important;
+}
+
+/* Виділення зон осей X та Y */
+#chart .plotly .xaxis {
+    background: rgba(0, 212, 170, 0.1) !important;
+    border: 1px solid rgba(0, 212, 170, 0.3) !important;
+    border-radius: 4px !important;
+}
+
+#chart .plotly .yaxis {
+    background: rgba(0, 212, 170, 0.1) !important;
+    border: 1px solid rgba(0, 212, 170, 0.3) !important;
+    border-radius: 4px !important;
+}
+
+/* Виділення заголовків осей */
+#chart .plotly .xaxis-title {
+    background: rgba(0, 212, 170, 0.15) !important;
+    color: #00d4aa !important;
+    padding: 4px 8px !important;
+    border-radius: 3px !important;
+    font-weight: bold !important;
+}
+
+#chart .plotly .yaxis-title {
+    background: rgba(0, 212, 170, 0.15) !important;
+    color: #00d4aa !important;
+    padding: 4px 8px !important;
+    border-radius: 3px !important;
+    font-weight: bold !important;
+}
+
+/* Виділення сітки */
+#chart .plotly .xgrid {
+    stroke: rgba(0, 212, 170, 0.2) !important;
+    stroke-width: 1px !important;
+}
+
+#chart .plotly .ygrid {
+    stroke: rgba(0, 212, 170, 0.2) !important;
+    stroke-width: 1px !important;
+}
+
+/* Виділення підписів осей */
+#chart .plotly .xtick {
+    color: #00d4aa !important;
+    font-weight: 500 !important;
+}
+
+#chart .plotly .ytick {
+    color: #00d4aa !important;
+    font-weight: 500 !important;
+}
+
+
+/* Виділення зон осей X та Y рамками */
+#chart .plotly .xaxis {
+    background: rgba(0, 212, 170, 0.1) !important;
+    border: 2px solid #00d4aa !important;
+    border-radius: 6px !important;
+    margin: 5px !important;
+    padding: 8px !important;
+}
+
+#chart .plotly .yaxis {
+    background: rgba(0, 212, 170, 0.1) !important;
+    border: 2px solid #00d4aa !important;
+    border-radius: 6px !important;
+    margin: 5px !important;
+    padding: 8px !important;
+}
+
+/* Додаткові рамки для зон осей */
+#chart .plotly .xaxislayer-above {
+    border: 2px solid #00d4aa !important;
+    border-radius: 6px !important;
+    background: rgba(0, 212, 170, 0.05) !important;
+    margin: 3px !important;
+}
+
+#chart .plotly .yaxislayer-above {
+    border: 2px solid #00d4aa !important;
+    border-radius: 6px !important;
+    background: rgba(0, 212, 170, 0.05) !important;
+    margin: 3px !important;
+}
+
+/* Виділення заголовків осей */
+#chart .plotly .xaxis-title {
+    color: #00d4aa !important;
+    font-weight: bold !important;
+    background: rgba(0, 212, 170, 0.2) !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+#chart .plotly .yaxis-title {
+    color: #00d4aa !important;
+    font-weight: bold !important;
+    background: rgba(0, 212, 170, 0.2) !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+/* Виділення сітки */
+#chart .plotly .xaxis .grid {
+    stroke: rgba(0, 212, 170, 0.3) !important;
+    stroke-width: 1px !important;
+}
+
+#chart .plotly .yaxis .grid {
+    stroke: rgba(0, 212, 170, 0.3) !important;
+    stroke-width: 1px !important;
+}
+
+/* Виділення зони дати знизу (X-осі) */
+#chart .plotly .xaxis {
+    background: rgba(255, 107, 107, 0.1) !important;
+    border: 3px solid #ff6b6b !important;
+    border-radius: 8px !important;
+    margin: 4px !important;
+    padding: 6px !important;
+}
+
+#chart .plotly .xaxislayer-above {
+    border: 4px solid #ff6b6b !important;
+    border-radius: 10px !important;
+    background: rgba(255, 107, 107, 0.12) !important;
+    margin: 6px !important;
+    padding: 8px !important;
+    box-shadow: 0 0 12px rgba(255, 107, 107, 0.4) !important;
+}
+
+/* Виділення підписів дати */
+#chart .plotly .xaxis .tick text {
+    color: #ff6b6b !important;
+    font-weight: 500 !important;
+    background: rgba(255, 107, 107, 0.1) !important;
+    padding: 2px 4px !important;
+    border-radius: 2px !important;
+}
+
+
+
+
+
+
+
 
 .info-panel {
     background: #1e222d;
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
 }
 
 .info-grid {
@@ -142,7 +309,8 @@ body {
     }
     
     #chart {
-        height: 500px;
+        height: 70vh;
+        min-height: 600px;
     }
 }
 

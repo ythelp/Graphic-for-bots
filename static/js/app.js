@@ -37,19 +37,165 @@ async function loadChart() {
         // Створюємо графік
         Plotly.newPlot('chart', chartData.data, chartData.layout, {
             responsive: true,
-            displayModeBar: true,
-            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
-            displaylogo: false
+            displayModeBar: false,
+            displaylogo: false,
+            scrollZoom: true,
+            doubleClick: 'reset+autosize',
+            dragmode: 'pan',
+            hovermode: false
         });
         
         // Оновлюємо інформаційну панель
         updateInfoPanel();
+        
+        // Відображення ціни справа прибрано
+        
+        // Додаємо функцію пересування після повного завантаження
+        addPanningAfterLoad();
+        
+        // Додаємо примусове встановлення осі Y справа
+        forceYAxisRight();
+        
+        // Додаємо виділення зони дати знизу
+        addDateZoneHighlight();
+        
+        // Додаємо обмеження пересування тільки до нижньої панелі
+        addRangesliderOnlyPanning();
+        
         
     } catch (error) {
         document.getElementById('chart').innerHTML = 
             '<div class="error">Помилка завантаження: ' + error.message + '</div>';
     }
 }
+
+// Зона ціни прибрана
+
+// Функції зони ціни прибрані
+
+// Функції відображення ціни прибрані
+
+// Функція updatePriceDisplay прибрана
+
+
+
+// Додавання функції пересування після повного завантаження
+function addPanningAfterLoad() {
+    setTimeout(() => {
+        try {
+            if (window.Plotly && chartData) {
+                // Встановлюємо режим пересування тільки для основного графіку
+                Plotly.relayout('chart', {
+                    'dragmode': 'pan',
+                    'xaxis': {
+                        'rangeslider': {'visible': true},
+                        'fixedrange': false
+                    },
+                    'yaxis': {
+                        'side': 'right',  // Фіксуємо вісь цін справа
+                        'fixedrange': false
+                    }
+                });
+                
+                console.log('✅ Функція пересування графіку активована');
+            }
+        } catch (error) {
+            console.error('❌ Помилка активації пересування:', error);
+        }
+    }, 3000); // Чекаємо 3 секунди для повного завантаження
+}
+
+// Примусове встановлення осі Y справа
+function forceYAxisRight() {
+    setTimeout(() => {
+        try {
+            if (window.Plotly && chartData) {
+                // Примусово встановлюємо вісь Y справа
+                Plotly.relayout('chart', {
+                    'yaxis': {
+                        'side': 'right',
+                        'showgrid': true,
+                        'gridcolor': 'rgba(0, 212, 170, 0.3)',
+                        'gridwidth': 1,
+                        'linecolor': '#00d4aa',
+                        'linewidth': 1,
+                        'tickcolor': '#00d4aa',
+                        'tickfont': {
+                            'color': '#00d4aa',
+                            'size': 12
+                        }
+                    }
+                });
+                
+                console.log('✅ Вісь Y примусово встановлена справа');
+            }
+        } catch (error) {
+            console.error('❌ Помилка встановлення осі Y справа:', error);
+        }
+    }, 4000); // Чекаємо 4 секунди для повного завантаження
+}
+
+// Виділення зони дати знизу (X-осі)
+function addDateZoneHighlight() {
+    setTimeout(() => {
+        try {
+            if (window.Plotly && chartData) {
+                // Встановлюємо стилі для X-осі (зона дати)
+                Plotly.relayout('chart', {
+                    'xaxis': {
+                        'showgrid': true,
+                        'gridcolor': 'rgba(255, 107, 107, 0.3)',
+                        'gridwidth': 2,
+                        'linecolor': '#ff6b6b',
+                        'linewidth': 3,
+                        'tickcolor': '#ff6b6b',
+                        'tickfont': {
+                            'color': '#ff6b6b',
+                            'size': 12
+                        }
+                    }
+                });
+                
+                console.log('✅ Зона дати знизу виділена');
+            }
+        } catch (error) {
+            console.error('❌ Помилка виділення зони дати:', error);
+        }
+    }, 5000); // Чекаємо 5 секунд для повного завантаження
+}
+
+// Обмеження пересування тільки до нижньої панелі (rangeslider)
+function addRangesliderOnlyPanning() {
+    setTimeout(() => {
+        try {
+            if (window.Plotly && chartData) {
+                // Встановлюємо режим пересування тільки для rangeslider
+                Plotly.relayout('chart', {
+                    'dragmode': 'pan',
+                    'xaxis': {
+                        'rangeslider': {
+                            'visible': true,
+                            'thickness': 0.1,  // Товщина нижньої панелі
+                            'bgcolor': 'rgba(255, 107, 107, 0.1)',  // Фон нижньої панелі
+                            'bordercolor': '#ff6b6b',  // Рамка нижньої панелі
+                            'borderwidth': 2
+                        },
+                        'fixedrange': false
+                    },
+                    'yaxis': {
+                        'side': 'right',
+                        'fixedrange': false
+                    }
+                });
+                
+                console.log('✅ Пересування обмежено тільки до нижньої панелі');
+            }
+        } catch (error) {
+            console.error('❌ Помилка обмеження пересування:', error);
+        }
+    }, 6000); // Чекаємо 6 секунд для повного завантаження
+}
+
 
 // Оновлення інформаційної панелі
 function updateInfoPanel() {
@@ -90,6 +236,9 @@ function updateInfoPanel() {
             document.getElementById('volume-24h').textContent = totalVolume.toFixed(0);
         }
         
+        // Оновлюємо відображення ціни справа
+        updatePriceDisplay();
+        
     } catch (error) {
         console.error('Помилка оновлення інформаційної панелі:', error);
     }
@@ -98,7 +247,8 @@ function updateInfoPanel() {
 // Оновлення графіка
 function refreshChart() {
     document.getElementById('chart').innerHTML = '<div class="loading">Оновлення...</div>';
-    loadChart();
+    // Не викликаємо loadChart() тут, щоб уникнути подвійного завантаження
+    location.reload();
 }
 
 // Перемикання теми
@@ -144,6 +294,20 @@ function exportChart() {
         link.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(exportHtml);
         link.click();
     }
+}
+
+// Завантаження всіх свічок
+function loadAllCandles() {
+    console.log('📊 Завантаження всіх 1000 свічок...');
+    
+    // Показуємо індикатор завантаження
+    document.getElementById('chart').innerHTML = '<div class="loading">Завантаження всіх свічок...</div>';
+    
+    // Оновлюємо інформаційну панель
+    setTimeout(() => {
+        updateInfoPanel();
+        console.log('✅ Всі свічки завантажено');
+    }, 1000);
 }
 
 // Ініціалізація при завантаженні сторінки

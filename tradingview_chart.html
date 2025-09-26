@@ -62,17 +62,17 @@
         }
         
         .main-content {
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 10px;
+            max-width: 100%;
+            margin: 0;
         }
         
         .chart-container {
             background: #1e222d;
             border-radius: 8px;
-            padding: 20px;
+            padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             position: relative;
         }
         
@@ -101,15 +101,16 @@
         
         #tradingview-widget {
             width: 100%;
-            height: 80vh; /* 80% висоти екрану */
-            min-height: 600px; /* мінімальна висота */
+            height: 90vh; /* 90% висоти екрану для більшого графіка */
+            min-height: 700px; /* збільшена мінімальна висота */
         }
         
         .info-panel {
             background: #1e222d;
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
         }
         
         .info-grid {
@@ -175,7 +176,8 @@
             }
             
             #tradingview-widget {
-                height: 500px;
+                height: 70vh;
+                min-height: 500px;
             }
         }
     </style>
@@ -271,6 +273,26 @@
                     "show_popup_button": true,
                     "popup_width": "1000",
                     "popup_height": "650",
+                    "overrides": {
+                        "paneProperties.background": "#1e222d",
+                        "paneProperties.vertGridProperties.color": "#2a2e39",
+                        "paneProperties.horzGridProperties.color": "#2a2e39",
+                        "symbolWatermarkProperties.transparency": 90,
+                        "scalesProperties.textColor": "#d1d4dc",
+                        "mainSeriesProperties.candleStyle.upColor": "#00d4aa",
+                        "mainSeriesProperties.candleStyle.downColor": "#f44336",
+                        "mainSeriesProperties.candleStyle.borderUpColor": "#00d4aa",
+                        "mainSeriesProperties.candleStyle.borderDownColor": "#f44336",
+                        "mainSeriesProperties.candleStyle.wickUpColor": "#00d4aa",
+                        "mainSeriesProperties.candleStyle.wickDownColor": "#f44336"
+                    },
+                    "disabled_features": [
+                        "volume_force_overlay",
+                        "create_volume_indicator_by_default"
+                    ],
+                    "enabled_features": [
+                        "side_toolbar_in_fullscreen_mode"
+                    ],
                     "datafeed": {
                         "onReady": function(callback) {
                             console.log('TradingView datafeed ready');
